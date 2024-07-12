@@ -1,8 +1,17 @@
 import logging
 import commands
+import callbacks
+import constants
 from telegram import Bot
-from telegram.ext import Application, CommandHandler
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    ConversationHandler,
+    MessageHandler,
+    filters,
+)
 from config import config, read_dotenv
+from utils import with_dm_only
 
 read_dotenv()
 
@@ -31,9 +40,27 @@ def main():
         Application.builder().token(config.get("TELEGRAM_BOT_API_KEY")).build()
     )
 
-    application.add_handler(CommandHandler("start", commands.start))
-    application.add_handler(CommandHandler("interview", commands.interview))
-    application.add_handler(CommandHandler("result", commands.result))
+    application.add_handler(
+        ConversationHandler(
+            entry_points=[
+                CommandHandler("start", with_dm_only(commands.start)),
+                CommandHandler("interview", with_dm_only(commands.interview)),
+                CommandHandler("result", with_dm_only(commands.result)),
+                CommandHandler(
+                    "upload_interview", with_dm_only(commands.upload_interview)
+                ),
+            ],
+            states={
+                constants.ConvState.RequestInterviewExcel: [
+                    MessageHandler(
+                        filters.Document.FileExtension("csv"),
+                        callbacks.receive_upload_excel,
+                    )
+                ]
+            },
+            fallbacks=[CommandHandler("start", with_dm_only(commands.start))],
+        )
+    )
 
     application.add_error_handler(
         lambda update, context: logger.error(
