@@ -15,12 +15,12 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "80:80"
-      - "443:443"
+      #- "80:80"
+      - "8443:8443"
     networks:
       - web
     depends_on:
-      - laundry-bot
+      - bot
     restart: unless-stopped
     volumes:
       - static-volume:/usr/share/nginx/html
