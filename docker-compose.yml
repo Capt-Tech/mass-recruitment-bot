@@ -10,6 +10,8 @@ services:
       - web
     volumes:
       - static-volume:/var/lib/mass_recruitment_bot
+    environment:
+      BASE_PATH: /var/lib/mass_recruitment_bot
   nginx:
     image: nginx:latest
     ports:

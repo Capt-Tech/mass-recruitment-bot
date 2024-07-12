@@ -9,6 +9,8 @@ async def receive_upload_excel(update: Update, context: CallbackContext) -> int:
     state = context.user_data["state"]
     if state == constants.ConvState.RequestInterviewExcel:
         path = constants.get_interview_path()
+    elif state == constants.ConvState.RequestResultExcel:
+        path = constants.get_result_path()
     else:
         raise Exception(f"Invalid interview file upload state: {state}")
 
@@ -17,7 +19,7 @@ async def receive_upload_excel(update: Update, context: CallbackContext) -> int:
     )
     file = await update.message.document.get_file()
     await file.download_to_drive(path)
-    print(f"File saved to {path}")
+
     if not excel.validate_interview_file(path):
         await update.effective_message.reply_text(
             "Unable to parse file. Please try again."

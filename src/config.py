@@ -11,7 +11,10 @@ def read_dotenv():
         {
             "TELEGRAM_BOT_API_KEY": os.getenv("TELEGRAM_BOT_API_KEY"),
             "BASE_PATH": os.getenv("BASE_PATH", "./data"),
+            "WEBHOOK_SECRET": os.getenv("WEBHOOK_SECRET"),
             "WEBHOOK_URL": os.getenv("WEBHOOK_URL"),
             "PRODUCTION": os.getenv("PRODUCTION") == "True",
+            "ADMIN_USERNAME": os.getenv("ADMIN_USERNAME", "").split(";"),
+            "DEVELOPERS": os.getenv("DEVELOPERS", "").split(";"),
         }
     )

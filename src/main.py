@@ -2,6 +2,7 @@ import logging
 import commands
 import callbacks
 import constants
+import middlewares
 from telegram import Bot
 from telegram.ext import (
     Application,
@@ -11,7 +12,6 @@ from telegram.ext import (
     filters,
 )
 from config import config, read_dotenv
-from utils import with_dm_only
 
 read_dotenv()
 
@@ -43,11 +43,27 @@ def main():
     application.add_handler(
         ConversationHandler(
             entry_points=[
-                CommandHandler("start", with_dm_only(commands.start)),
-                CommandHandler("interview", with_dm_only(commands.interview)),
-                CommandHandler("result", with_dm_only(commands.result)),
                 CommandHandler(
-                    "upload_interview", with_dm_only(commands.upload_interview)
+                    "start",
+                    middlewares.with_admin_context(
+                        middlewares.with_dm_only(commands.start)
+                    ),
+                ),
+                CommandHandler(
+                    "interview", middlewares.with_dm_only(commands.interview)
+                ),
+                CommandHandler("result", middlewares.with_dm_only(commands.result)),
+                CommandHandler(
+                    "upload_interview",
+                    middlewares.with_dm_only(
+                        middlewares.with_admin_only(commands.upload_interview)
+                    ),
+                ),
+                CommandHandler(
+                    "upload_result",
+                    middlewares.with_dm_only(
+                        middlewares.with_admin_only(commands.upload_result)
+                    ),
                 ),
             ],
             states={
@@ -56,9 +72,22 @@ def main():
                         filters.Document.FileExtension("csv"),
                         callbacks.receive_upload_excel,
                     )
-                ]
+                ],
+                constants.ConvState.RequestResultExcel: [
+                    MessageHandler(
+                        filters.Document.FileExtension("csv"),
+                        callbacks.receive_upload_excel,
+                    )
+                ],
             },
-            fallbacks=[CommandHandler("start", with_dm_only(commands.start))],
+            fallbacks=[
+                CommandHandler(
+                    "start",
+                    middlewares.with_admin_context(
+                        middlewares.with_dm_only(commands.start)
+                    ),
+                )
+            ],
         )
     )
 
@@ -72,6 +101,7 @@ def main():
         logger.info("Running on webhook")
         application.run_webhook(
             listen="0.0.0.0",
+            secret_token=config.get("WEBHOOK_SECRET"),
             port=config.get("PORT"),
             webhook_url=config.get("WEBHOOK_URL"),
         )
