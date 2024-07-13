@@ -5,6 +5,9 @@ TELEGRAM_HANDLE_COLUMN = "telegram handle"
 BOOKING_LINK_ROW = "bookingLink"
 PD_HANDLE_ROW = "pd"
 
+INTERVIEW_POSITIVE = "1"
+RESULT_POSITIVE = "Offered"
+
 
 def validate_interview_file(path):
     is_interview_path = path == constants.get_interview_path(constants.TMP_PREFIX)
@@ -40,8 +43,24 @@ def get_interview_data(username):
         try:
             result = []
             for subcomm, link in links:
-                if df.loc[username][subcomm] == "1":
+                if df.loc[username][subcomm] == INTERVIEW_POSITIVE:
                     result.append((subcomm, link))
+            return result
+        except KeyError:
+            return []
+    except FileNotFoundError:
+        return []
+
+
+def get_result_data(username):
+    try:
+        df = pd.read_csv(constants.get_result_path(), index_col=TELEGRAM_HANDLE_COLUMN)
+        pd_handles = df.loc[PD_HANDLE_ROW].items()
+        try:
+            result = []
+            for subcomm, handle in pd_handles:
+                if df.loc[username][subcomm] == RESULT_POSITIVE:
+                    result.append((subcomm, handle))
             return result
         except KeyError:
             return []

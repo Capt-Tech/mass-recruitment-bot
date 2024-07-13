@@ -27,7 +27,7 @@ async def receive_upload_excel(update: Update, context: CallbackContext) -> int:
     error = excel.validate_interview_file(tmp_path)
     if error:
         await update.effective_message.reply_text(
-            f"Unable to parse file ({error}). Please try again."
+            f"Unable to parse file (Error: {error}). Please try again."
         )
         return constants.ConvState.RequestInterviewExcel
 
