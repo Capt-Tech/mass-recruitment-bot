@@ -18,7 +18,7 @@ def with_dm_only(callback):
 
 def with_admin_context(callback):
     async def returned_callback(update: Update, context: CallbackContext):
-        admins = config.get("ADMIN_USERNAME")
+        admins = config.get("ADMIN_USERNAME") + config.get("DEVELOPERS")
         if update.effective_user.username in admins:
             context.user_data["is_admin"] = True
         else:
@@ -31,7 +31,7 @@ def with_admin_context(callback):
 
 def with_admin_only(callback):
     async def returned_callback(update: Update, context: CallbackContext):
-        admins = config.get("ADMIN_USERNAME")
+        admins = config.get("ADMIN_USERNAME") + config.get("DEVELOPERS")
         if update.effective_user.username not in admins:
             await update.effective_message.reply_text(
                 "This command can only be used by admins"
