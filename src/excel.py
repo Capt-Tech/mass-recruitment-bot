@@ -20,13 +20,13 @@ def validate_interview_file(path):
             try:
                 df.loc[BOOKING_LINK_ROW]
             except KeyError:
-                return BOOKING_LINK_ROW + " column not found"
+                return BOOKING_LINK_ROW + " row not found"
 
         if is_result_path:
             try:
                 df.loc[PD_HANDLE_ROW]
             except KeyError:
-                return PD_HANDLE_ROW + " column not found"
+                return PD_HANDLE_ROW + " row not found"
     except KeyError:
         return TELEGRAM_HANDLE_COLUMN + " column not found"
 
