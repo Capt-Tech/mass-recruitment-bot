@@ -21,22 +21,8 @@ START_PART_B = "\n\nAdmin commands:\n/upload_interview - Upload interview schedu
 
 def get_start_message(is_admin):
     START_PART_C = f"\n\nPlease contact admins regarding any issues or queries:\n{"\n".join(map(lambda x: "@"+x,config.get("ADMIN_USERNAME")))}\n\nThis bot was developed by {" ".join(map(lambda x: "@"+x,config.get("DEVELOPERS")))}.\n"
-#     START_PART_C = (
-#     f"\n\nPlease contact admins regarding any issues or queries:\n"
-#     f"{chr(10).join(map(lambda x: '@' + x, config.get('ADMIN_USERNAME')))}\n\n"
-#     f"This bot was developed by {' '.join(map(lambda x: '@' + x, config.get('DEVELOPERS')))}.\n"
-# )
-
     return START_PART_A + (START_PART_B if is_admin else "") + START_PART_C
 
 
 def get_username_not_found_error_msg():
-#     ERROR_MESSAGE = (
-#     f"Hi! It appears we can’t find you in the system.\n\n"
-#     f"Please confirm the Telegram handle you provided is correct. "
-#     f"Your data may still be processing.\n\n"
-#     f"If this is unexpected, please contact an admin:\n"
-#     f"{chr(10).join(map(lambda x: '@' + x, config.get('ADMIN_USERNAME')))}"
-# )
-#     return ERROR_MESSAGE
     return f"Hi! It appears we can’t find you in the system.\n\nPlease confirm the Telegram handle you provided is correct. Your data may still be processing.\n\nIf this is unexpected, please contact an admin:\n{"\n".join(map(lambda x: "@"+x,config.get("ADMIN_USERNAME")))}"

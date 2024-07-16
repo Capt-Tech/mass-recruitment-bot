@@ -22,10 +22,12 @@ Bot to manage recruitment links and mass distribution of results in CAPT mass re
 git clone https://github.com/Capt-Tech/mass-recruitment-bot
 ```
 
-2. Create a `.env` file in root folder with the following content and update Telegram bot API key
+2. Create a `.env` file in root folder with the following content and update Telegram bot API key, admin username and developers
 
 ```
 TELEGRAM_BOT_API_KEY=<YOUR_API_KEY>
+ADMIN_USERNAME = <your telegram handle separated with ;>
+DEVELOPERS = <your telegram handle separated with ;>
 ```
 
 3. Install Packages
@@ -34,7 +36,9 @@ TELEGRAM_BOT_API_KEY=<YOUR_API_KEY>
 pip install -r requirements.txt
 ```
 
-4. Run Bot
+4. Create a data folder in teh root folder and a tmp_interview.csv file
+
+5. Run Bot
 
 ```
 python src/main.py
