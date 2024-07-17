@@ -30,6 +30,9 @@ COMMANDS_DICT = {
     "start": "Display help page",
     "interview": "Book an interview slot",
     "result": "Get outcome",
+    "upload_interview": "Upload interview details", 
+    "upload_results": "Upload result details", 
+    "broadcast": "Broadcast a message"
 }
 
 TBOT.set_my_commands(COMMANDS_DICT.items())
@@ -64,6 +67,14 @@ def main():
                     middlewares.with_dm_only(
                         middlewares.with_admin_only(commands.upload_result)
                     ),
+                    
+                ),
+                CommandHandler(
+                    "broadcast",
+                    middlewares.with_dm_only(
+                        middlewares.with_admin_only(commands.broadcast)
+                    ),
+                    
                 ),
             ],
             states={
@@ -79,6 +90,16 @@ def main():
                         callbacks.receive_upload_excel,
                     )
                 ],
+                commands.CHOOSING: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, commands.choosing)
+                ],
+                commands.TYPING_REPLY: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, commands.received_message)
+                ],
+                commands.CONFIRM: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, commands.confirm)
+                ],
+                
             },
             fallbacks=[
                 CommandHandler(
@@ -86,7 +107,8 @@ def main():
                     middlewares.with_admin_context(
                         middlewares.with_dm_only(commands.start)
                     ),
-                )
+                ),
+                CommandHandler("cancel", commands.cancel)
             ],
         )
     )
