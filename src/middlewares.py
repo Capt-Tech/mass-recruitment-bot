@@ -1,5 +1,5 @@
 from config import config
-import os
+import os, json
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
@@ -43,16 +43,33 @@ def with_admin_only(callback):
     return returned_callback
 
 def record_user_details(username, chat_id):
-    # getting the path to user_details.txt which is in the directory as middlewares.py
-    base_dir = os.path.dirname(os.path.dirname(__file__)) 
-    file_path = os.path.join(base_dir, "data", "user_details.txt")  
+    base_dir = os.path.dirname(os.path.dirname(__file__))
+    file_path = os.path.join(base_dir, "data", "user_details.json")
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    with open(file_path, "r+") as file:
-        lines = file.readlines()
-        for line in lines:
-            if f"{username},{chat_id}\n" in line:
-                return 
+    # Initialize an empty list for storing user details
+    user_details = []
 
-        # If not found in txt , write the user details at the end of the file
-        file.write(f"{username},{chat_id}\n")
-        print("Details recorded")
+    # Read existing data from the JSON file if it exists
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r") as file:
+                content = file.read().strip()
+                if content:
+                    user_details = json.loads(content)
+        except (json.JSONDecodeError, FileNotFoundError) as e:
+            print(f"Error reading JSON file: {e}. Initializing with an empty list.")
+
+    # Check if the user details are already present
+    for user in user_details:
+        if user.get("username") == username and user.get("chat_id") == chat_id:
+            return
+
+    # If not found in JSON, add the new user details
+    user_details.append({"username": username, "chat_id": chat_id})
+
+    # Write the updated user details back to the JSON file
+    with open(file_path, "w") as file:
+        json.dump(user_details, file, indent=4)
+
+    print("Details recorded")

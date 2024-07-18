@@ -10,6 +10,7 @@ from telegram.ext import (
     ConversationHandler,
     MessageHandler,
     filters,
+    CallbackQueryHandler
 )
 from config import config, read_dotenv
 
@@ -91,13 +92,13 @@ def main():
                     )
                 ],
                 commands.CHOOSING: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, commands.choosing)
+                    CallbackQueryHandler(commands.choosing, pattern='^fixed|custom$')
                 ],
                 commands.TYPING_REPLY: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND, commands.received_message)
                 ],
                 commands.CONFIRM: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, commands.confirm)
+                    CallbackQueryHandler(commands.confirm, pattern='^yes|no$')
                 ],
                 
             },
