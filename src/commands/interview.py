@@ -1,6 +1,6 @@
 import excel
 import constants
-import middlewares
+import file
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
@@ -20,6 +20,6 @@ async def interview(update: Update, context: CallbackContext):
     
     username = update.effective_user.username
     chat_id = update.message.chat_id
-    middlewares.record_user_details(username, chat_id)
+    file.record_user_details(username, chat_id)
 
     await update.effective_message.reply_text(message, parse_mode="HTML")

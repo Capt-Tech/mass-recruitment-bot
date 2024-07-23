@@ -1,6 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler
-import os, json
+import os, json, constants
 
 CHOOSING, TYPING_REPLY, CONFIRM = range(3)
 
@@ -57,14 +57,7 @@ async def confirm(update: Update, context: CallbackContext) -> int:
     await query.answer()
     text=query.data.lower()
     if text == 'yes':
-        # Read user details from user_details.json
-        base_dir = os.path.dirname(os.path.dirname(__file__))
-        file_path = os.path.join(base_dir, "..", "data", "user_details.json")
-
-        print(f"Base directory: {base_dir}")
-        print(f"File path: {file_path}")
-
-
+        file_path = constants.get_user_details_path()
         if not os.path.exists(file_path):
             await update.message.reply_text("User details file not found. Please ensure the file exists.")
             return ConversationHandler.END
@@ -77,8 +70,8 @@ async def confirm(update: Update, context: CallbackContext) -> int:
             except (json.JSONDecodeError, FileNotFoundError) as e:
                 print(f"Error reading JSON file: {e}. Initializing with an empty list.")
         
-        for detail in user_details:
-            username, chat_id = detail.get("username"), detail.get("chat_id")
+        for username, details in user_details.items():
+            chat_id = details["chat_id"]
             message = f"Hi {username},\n\n{context.user_data['broadcast_message']}\n\nThank you!😊"
             await context.bot.send_message(chat_id=chat_id, text=message)
 
@@ -89,16 +82,6 @@ async def confirm(update: Update, context: CallbackContext) -> int:
     elif text == 'no':
         await query.edit_message_text("Broadcast cancelled.")
         return ConversationHandler.END
-    else:
-        keyboard = [
-        [
-            InlineKeyboardButton("Yes", callback_data='yes'),
-            InlineKeyboardButton("No", callback_data='no')
-        ]
-    ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.edit_message_text("Please choose.", reply_markup=reply_markup)
-        return CONFIRM
 
 async def cancel(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text("Broadcast cancelled.")

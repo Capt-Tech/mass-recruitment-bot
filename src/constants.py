@@ -16,8 +16,12 @@ def get_result_path(prefix=""):
     return config.get("BASE_PATH") + "/"+prefix+"result.csv"
 
 
+def get_user_details_path(prefix=""):
+    return config.get("BASE_PATH") + "/"+prefix+"user_details.json"
+
+
 START_PART_A = "Welcome to the CAPT Mass Recruitment Bot! This bot is used to manage the mass recruitment process for CAPT. You can use the following commands:\n/start - Display this message\n/interview - Get interview booking links\n/result - Get roles offered"
-START_PART_B = "\n\nAdmin commands:\n/upload_interview - Upload interview schedule\n/upload_result - Upload results\n/broadcast-broadcast a message to all users"
+START_PART_B = "\n\nAdmin commands:\n/upload_interview - Upload interview schedule\n/upload_result - Upload results\n/broadcast-Broadcast a message to all users"
 
 def get_start_message(is_admin):
     START_PART_C = f"\n\nPlease contact admins regarding any issues or queries:\n{"\n".join(map(lambda x: "@"+x,config.get("ADMIN_USERNAME")))}\n\nThis bot was developed by {" ".join(map(lambda x: "@"+x,config.get("DEVELOPERS")))}.\n"
