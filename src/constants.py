@@ -1,11 +1,19 @@
 from enum import Enum
 from config import config
 
+FIXED = 'fixed'
+CUSTOM = 'custom'
+YES = 'yes'
+NO = 'no'
+
 TMP_PREFIX = "tmp_"
 
 class ConvState(str, Enum):
     RequestInterviewExcel = "RequestInterviewExcel"
     RequestResultExcel = "RequestResultExcel"
+    Choosing = "Choosing"
+    TypingReply = "TypingReply"
+    Confirm = "Confirm"
 
 
 def get_interview_path(prefix=""):
@@ -30,3 +38,5 @@ def get_start_message(is_admin):
 
 def get_username_not_found_error_msg():
     return f"Hi! It appears we can’t find you in the system.\n\nPlease confirm the Telegram handle you provided is correct. Your data may still be processing.\n\nIf this is unexpected, please contact an admin:\n{"\n".join(map(lambda x: "@"+x,config.get("ADMIN_USERNAME")))}"
+
+

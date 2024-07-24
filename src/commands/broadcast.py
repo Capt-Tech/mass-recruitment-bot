@@ -1,62 +1,61 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler
-import os, json, constants
-
-CHOOSING, TYPING_REPLY, CONFIRM = range(3)
+import os, json
+import constants
 
 async def broadcast(update: Update, context: CallbackContext) -> int:
     keyboard = [
         [
-            InlineKeyboardButton("Fixed", callback_data='fixed'),
-            InlineKeyboardButton("Custom", callback_data='custom')
+            InlineKeyboardButton("Fixed", callback_data = constants.FIXED),
+            InlineKeyboardButton("Custom", callback_data = constants.CUSTOM)
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text("Do you want to send the fixed message or a custom message?",
                                     reply_markup=reply_markup)
-    return CHOOSING
+    return constants.ConvState.Choosing
 
 async def choosing(update: Update, context: CallbackContext) -> int:
-    query=update.callback_query
+    query = update.callback_query
     await query.answer()
     text = query.data.lower()
 
     keyboard = [
         [
-            InlineKeyboardButton("Yes", callback_data='yes'),
-            InlineKeyboardButton("No", callback_data='no')
+            InlineKeyboardButton("Yes", callback_data = constants.YES),
+            InlineKeyboardButton("No", callback_data = constants.NO)
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    if text == 'fixed':
+    if text == constants.FIXED:
         context.user_data['broadcast_message'] = "This is the fixed broadcast message."
         await query.edit_message_text(f"The message is: {context.user_data['broadcast_message']}\nPlease choose Yes or No.", reply_markup=reply_markup)
-        return CONFIRM
-    elif text == 'custom':
+        return constants.ConvState.Confirm
+    elif text == constants.CUSTOM:
         await query.edit_message_text("Please type your custom message:")
-        return TYPING_REPLY
+        return constants.ConvState.TypingReply
     else:
         await query.edit_message_text("Invalid choice. Please choose 'fixed' or 'custom'.")
-        return CHOOSING
+        return constants.ConvState.Choosing
 
 async def received_message(update: Update, context: CallbackContext) -> int:
     keyboard = [
         [
-            InlineKeyboardButton("Yes", callback_data='yes'),
-            InlineKeyboardButton("No", callback_data='no')
+            InlineKeyboardButton("Yes", callback_data = constants.YES),
+            InlineKeyboardButton("No", callback_data = constants.NO)
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data['broadcast_message'] = update.message.text
-    await update.message.reply_text(f"The message is: {context.user_data['broadcast_message']}.",reply_markup=reply_markup)
-    return CONFIRM
+    await update.message.reply_text(f"The message is: {context.user_data['broadcast_message']}.", reply_markup=reply_markup)
+    return constants.ConvState.Confirm
 
 async def confirm(update: Update, context: CallbackContext) -> int:
-    query=update.callback_query
+    query = update.callback_query
     await query.answer()
-    text=query.data.lower()
-    if text == 'yes':
+    text = query.data.lower()
+    if text == constants.YES:
         file_path = constants.get_user_details_path()
         if not os.path.exists(file_path):
             await update.message.reply_text("User details file not found. Please ensure the file exists.")
@@ -79,7 +78,7 @@ async def confirm(update: Update, context: CallbackContext) -> int:
         
         await query.edit_message_text(f"Broadcast message sent to all users: {message}")
         return ConversationHandler.END
-    elif text == 'no':
+    elif text == constants.NO:
         await query.edit_message_text("Broadcast cancelled.")
         return ConversationHandler.END
 

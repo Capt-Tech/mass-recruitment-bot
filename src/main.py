@@ -91,13 +91,13 @@ def main():
                         callbacks.receive_upload_excel,
                     )
                 ],
-                commands.CHOOSING: [
+                constants.ConvState.Choosing: [
                     CallbackQueryHandler(commands.choosing, pattern='^fixed|custom$')
                 ],
-                commands.TYPING_REPLY: [
+                constants.ConvState.TypingReply: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND, commands.received_message)
                 ],
-                commands.CONFIRM: [
+                constants.ConvState.Confirm: [
                     CallbackQueryHandler(commands.confirm, pattern='^yes|no$')
                 ],
                 

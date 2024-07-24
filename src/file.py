@@ -1,10 +1,6 @@
 import os, json
 import constants
 
-
-
-
-
 def record_user_details(username, chat_id):
     file_path = constants.get_user_details_path()
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -29,3 +25,4 @@ def record_user_details(username, chat_id):
         json.dump(user_details, file, indent=4)
 
     print("Details recorded")
+
