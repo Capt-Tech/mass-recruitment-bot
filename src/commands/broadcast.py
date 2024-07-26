@@ -2,6 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler
 import os, json
 import constants
+import file
 
 async def broadcast(update: Update, context: CallbackContext) -> int:
     keyboard = [
@@ -57,26 +58,19 @@ async def confirm(update: Update, context: CallbackContext) -> int:
     text = query.data.lower()
     if text == constants.YES:
         file_path = constants.get_user_details_path()
-        if not os.path.exists(file_path):
-            await update.message.reply_text("User details file not found. Please ensure the file exists.")
+        file.ensure_directory_exists(file_path)
+
+        user_details = file.read_user_details(file_path)
+        if not user_details:
+            await query.edit_message_text("User details file not found. Please ensure the file exists.")
             return ConversationHandler.END
-        else:
-            try:
-                with open(file_path, "r") as file:
-                    content = file.read().strip()
-                    if content:
-                        user_details = json.loads(content)
-            except (json.JSONDecodeError, FileNotFoundError) as e:
-                print(f"Error reading JSON file: {e}. Initializing with an empty list.")
-        
+
         for username, details in user_details.items():
             chat_id = details["chat_id"]
             message = f"Hi {username},\n\n{context.user_data['broadcast_message']}\n\nThank you!😊"
             await context.bot.send_message(chat_id=chat_id, text=message)
 
-        message = context.user_data['broadcast_message']
-        
-        await query.edit_message_text(f"Broadcast message sent to all users: {message}")
+        await query.edit_message_text(f"Broadcast message sent to all users: {context.user_data['broadcast_message']}")
         return ConversationHandler.END
     elif text == constants.NO:
         await query.edit_message_text("Broadcast cancelled.")
