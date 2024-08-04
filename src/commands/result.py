@@ -32,8 +32,8 @@ async def reply_result(
 
     message = "Hi, you have been offered the following roles:\n\n"
     i = 1
-    for subcomm, pd_handle in pd_handles:
-        message += f"{i}. {subcomm} - {pd_handle}\n"
+    for comm, subcomm, pd_handle in pd_handles:
+        message += f"{i}. {comm} - {subcomm} [{pd_handle}]\n"
         i += 1
     message += "\nPlease kindly accept one offer by sending the relevant PD the following message"
     await message_fn(message)

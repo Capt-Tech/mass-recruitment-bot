@@ -1,12 +1,12 @@
 import constants
 import pandas as pd
+import math
 
 TELEGRAM_HANDLE_COLUMN = "telegram handle"
 BOOKING_LINK_ROW = "bookingLink"
 PD_HANDLE_ROW = "pd"
 
 INTERVIEW_POSITIVE = "1"
-RESULT_POSITIVE = "Offered"
 
 
 def validate_interview_file(path):
@@ -58,9 +58,13 @@ def get_result_data(username):
         pd_handles = df.loc[PD_HANDLE_ROW].items()
         try:
             result = []
-            for subcomm, handle in pd_handles:
-                if df.loc[username][subcomm] == RESULT_POSITIVE:
-                    result.append((subcomm, handle))
+            for comm, handle in pd_handles:
+                subcomm = df.loc[username][comm]
+                if not subcomm or type(subcomm) != str:
+                    continue
+                subcomm = subcomm.strip()
+                if len(subcomm) > 0:
+                    result.append((comm, subcomm, handle))
             return result
         except KeyError:
             return None
