@@ -122,6 +122,12 @@ def main():
                 constants.ConvState.ConfirmBroadcast: [
                     CallbackQueryHandler(commands.confirm, pattern="^yes|no$")
                 ],
+                constants.ConvState.WaitingPhoto: [
+                    CallbackQueryHandler(commands.received_photo),
+                    MessageHandler(
+                        filters.PHOTO & ~filters.COMMAND, commands.received_photo
+                    ),
+                ],
             },
             fallbacks=[
                 CommandHandler(

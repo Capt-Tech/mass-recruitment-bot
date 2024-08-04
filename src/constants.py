@@ -12,6 +12,7 @@ class ConvState(str, Enum):
     RequestInterviewExcel = "RequestInterviewExcel"
     RequestResultExcel = "RequestResultExcel"
     Choosing = "Choosing"
+    WaitingPhoto = "WaitingPhoto"
     TypingReply = "TypingReply"
     ConfirmBroadcast = "Confirm"
 

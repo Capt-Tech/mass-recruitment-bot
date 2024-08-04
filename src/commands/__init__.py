@@ -8,6 +8,7 @@ from .broadcast import (
     broadcast_results,
     choosing,
     received_message,
+    received_photo,
     confirm,
     cancel,
 )

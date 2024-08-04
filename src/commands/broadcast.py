@@ -69,21 +69,28 @@ async def choosing(update: Update, context: CallbackContext) -> int:
 
 
 async def received_message(update: Update, context: CallbackContext) -> int:
-    keyboard = [
-        [
-            InlineKeyboardButton("Yes", callback_data=constants.YES),
-            InlineKeyboardButton("No", callback_data=constants.NO),
-        ]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data["broadcast_message"] = update.message.text_html
-    await update.message.reply_text(
-        f"The message is:\n{context.user_data['broadcast_message']}.",
-        reply_markup=reply_markup,
-        parse_mode=ParseMode.HTML,
-    )
-    return constants.ConvState.ConfirmBroadcast
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("Skip", callback_data=constants.NO)]])
+    await update.message.reply_text("Attach a photo", reply_markup=reply_markup)
+    return constants.ConvState.WaitingPhoto
 
+async def received_photo(update: Update, context: CallbackContext) -> int:
+    reply_markup = InlineKeyboardMarkup(yes_no_keyboard)
+    if not update.effective_message.photo or not update.effective_message.photo[0]:
+        await update.callback_query.answer()
+        await update.effective_message.reply_text(
+          context.user_data['broadcast_message'],
+          parse_mode=ParseMode.HTML,
+        )
+    else:
+        context.user_data['broadcast_photo'] = update.effective_message.photo[0].file_id
+        await update.effective_message.reply_photo(
+            context.user_data['broadcast_photo'],
+            context.user_data['broadcast_message'], 
+            parse_mode=ParseMode.HTML,
+        )
+    await update.effective_message.reply_text("Confirm your message above is correct", reply_markup=reply_markup)
+    return constants.ConvState.ConfirmBroadcast
 
 async def confirm(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
@@ -107,19 +114,22 @@ async def confirm(update: Update, context: CallbackContext) -> int:
             for username, details in user_details.items():
                 chat_id = details["chat_id"]
                 try:
-                    await context.bot.send_message(chat_id, context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
+                    if "broadcast_photo" in context.user_data:
+                        await context.bot.send_photo(chat_id, context.user_data["broadcast_photo"], caption=context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
+                    else:
+                        await context.bot.send_message(chat_id, context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
                 except Exception as e:
                     print(e)
                     failed_users.add(username)
 
             if len(failed_users) > 0:
                 await query.edit_message_text(
-                    f"Broadcast message sent to all users: {context.user_data['broadcast_message']}\n\nFailed to send to:\n{'\n'.join(map(lambda x:"@"+x,failed_users))}",
+                    f"Broadcast message sent to all users\n\nFailed to send to:\n{'\n'.join(map(lambda x:"@"+x,failed_users))}",
                     parse_mode=ParseMode.HTML
                 )
             else:
                 await query.edit_message_text(
-                    f"Broadcast message sent to all users: {context.user_data['broadcast_message']}",
+                    "Broadcast message sent to all users",
                     parse_mode=ParseMode.HTML
                 )
         elif context.user_data["broadcast_type"] == constants.BroadcastType.Results:
@@ -152,7 +162,6 @@ async def confirm(update: Update, context: CallbackContext) -> int:
             await query.edit_message_text(
                 f"Invalid broadcast type: {context.user_data['broadcast_message']}"
             )
-
         return ConversationHandler.END
     elif text == constants.NO:
         await query.edit_message_text("Broadcast cancelled.")
