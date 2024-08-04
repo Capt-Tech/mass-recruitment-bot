@@ -63,6 +63,17 @@ def get_result_data(username):
                     result.append((subcomm, handle))
             return result
         except KeyError:
-            return []
+            return None
     except FileNotFoundError:
-        return []
+        return None
+
+
+def get_result_usernames():
+    try:
+        df = pd.read_csv(constants.get_result_path(), index_col=TELEGRAM_HANDLE_COLUMN)
+        usernames_with_at = list(
+            filter(lambda x: x != PD_HANDLE_ROW, df.index.values.tolist())
+        )
+        return list(map(lambda x: x[1:], usernames_with_at))
+    except FileNotFoundError:
+        return None

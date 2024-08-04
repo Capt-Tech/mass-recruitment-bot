@@ -82,10 +82,18 @@ def main():
                     ),
                 ),
                 CommandHandler(
-                    "broadcast",
+                    "broadcast_message",
                     middlewares.with_dm_only(
                         middlewares.with_admin_only(
-                            middlewares.store_user_data(commands.broadcast)
+                            middlewares.store_user_data(commands.broadcast_message)
+                        )
+                    ),
+                ),
+                CommandHandler(
+                    "broadcast_results",
+                    middlewares.with_dm_only(
+                        middlewares.with_admin_only(
+                            middlewares.store_user_data(commands.broadcast_results)
                         )
                     ),
                 ),
@@ -111,7 +119,7 @@ def main():
                         filters.TEXT & ~filters.COMMAND, commands.received_message
                     )
                 ],
-                constants.ConvState.Confirm: [
+                constants.ConvState.ConfirmBroadcast: [
                     CallbackQueryHandler(commands.confirm, pattern="^yes|no$")
                 ],
             },
