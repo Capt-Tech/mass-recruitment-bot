@@ -1,8 +1,8 @@
 import excel
 import constants
-import file
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
+from telegram.constants import ParseMode
 
 
 async def interview(update: Update, context: CallbackContext):
@@ -18,4 +18,4 @@ async def interview(update: Update, context: CallbackContext):
         message += f'{i}. {subcomm} - <a href="{link}">Book Interview</a>\n'
         i += 1
 
-    await update.effective_message.reply_text(message, parse_mode="HTML")
+    await update.effective_message.reply_text(message, parse_mode=ParseMode.HTML)

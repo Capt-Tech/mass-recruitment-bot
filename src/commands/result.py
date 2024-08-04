@@ -2,6 +2,7 @@ import excel
 import constants
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
+from telegram.constants import ParseMode
 
 
 async def result(update: Update, context: CallbackContext):
@@ -39,6 +40,6 @@ async def reply_result(
     await message_fn(message)
     await message_fn(
         "I, __Name, Student No\\.__, accept the role of __role__\\.",
-        parse_mode="MarkdownV2",
+        parse_mode=ParseMode.MARKDOWN_V2,
     )
     return ConversationHandler.END

@@ -1,5 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler
+from telegram.constants import ParseMode
 import constants
 import file
 from commands.result import reply_result
@@ -53,7 +54,7 @@ async def choosing(update: Update, context: CallbackContext) -> int:
     if text == constants.FIXED:
         context.user_data["broadcast_message"] = "This is the fixed broadcast message."
         await query.edit_message_text(
-            f"The message is: {context.user_data['broadcast_message']}\nPlease choose Yes or No.",
+            f"The message is:\n{context.user_data['broadcast_message']}\nPlease choose Yes or No.",
             reply_markup=reply_markup,
         )
         return constants.ConvState.ConfirmBroadcast
@@ -75,10 +76,11 @@ async def received_message(update: Update, context: CallbackContext) -> int:
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    context.user_data["broadcast_message"] = update.message.text
+    context.user_data["broadcast_message"] = update.message.text_html
     await update.message.reply_text(
-        f"The message is: {context.user_data['broadcast_message']}.",
+        f"The message is:\n{context.user_data['broadcast_message']}.",
         reply_markup=reply_markup,
+        parse_mode=ParseMode.HTML,
     )
     return constants.ConvState.ConfirmBroadcast
 
@@ -104,20 +106,21 @@ async def confirm(update: Update, context: CallbackContext) -> int:
         if context.user_data["broadcast_type"] == constants.BroadcastType.Message:
             for username, details in user_details.items():
                 chat_id = details["chat_id"]
-                message = f"Hi {username},\n\n{context.user_data['broadcast_message']}\n\nThank you! 😊"
                 try:
-                    await context.bot.send_message(chat_id, message)
+                    await context.bot.send_message(chat_id, context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
                 except Exception as e:
                     print(e)
                     failed_users.add(username)
 
             if len(failed_users) > 0:
                 await query.edit_message_text(
-                    f"Broadcast message sent to all users: {context.user_data['broadcast_message']}\n\nFailed to send to:\n{'\n'.join(map(lambda x:"@"+x,failed_users))}"
+                    f"Broadcast message sent to all users: {context.user_data['broadcast_message']}\n\nFailed to send to:\n{'\n'.join(map(lambda x:"@"+x,failed_users))}",
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 await query.edit_message_text(
-                    f"Broadcast message sent to all users: {context.user_data['broadcast_message']}"
+                    f"Broadcast message sent to all users: {context.user_data['broadcast_message']}",
+                    parse_mode=ParseMode.HTML
                 )
         elif context.user_data["broadcast_type"] == constants.BroadcastType.Results:
             sent_users = set()
@@ -140,7 +143,8 @@ async def confirm(update: Update, context: CallbackContext) -> int:
 
             if len(failed_users) > 0:
                 await query.edit_message_text(
-                    f"Results broadcasted to all users\n\nFailed to send to:\n{'\n'.join(map(lambda x:"@"+x,failed_users))}"
+                    f"Results broadcasted to all users\n\nFailed to send to:\n{'\n'.join(map(lambda x:"@"+x,failed_users))}",
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 await query.edit_message_text(f"Results broadcasted to all users")
