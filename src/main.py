@@ -26,6 +26,7 @@ logging.getLogger("apscheduler.executors.default").setLevel(logging.WARNING)
 logger = logging.getLogger("main")
 
 TBOT = Bot(config.get("TELEGRAM_BOT_API_KEY"))
+TBOT.set_my_commands(constants.COMMANDS.items())
 
 COMMANDS_DICT = {
     "start": "Display help page",
