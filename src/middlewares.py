@@ -1,5 +1,6 @@
 from config import config
 
+import file
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
@@ -30,6 +31,16 @@ def with_admin_context(callback):
     return returned_callback
 
 
+def store_user_data(callback):
+    async def returned_callback(update: Update, context: CallbackContext):
+        username = update.effective_user.username
+        chat_id = update.message.chat_id
+        file.record_user_details(username, chat_id)
+        return await callback(update, context)
+
+    return returned_callback
+
+
 def with_admin_only(callback):
     async def returned_callback(update: Update, context: CallbackContext):
         admins = config.get("ADMIN_USERNAME") + config.get("DEVELOPERS")
@@ -41,4 +52,3 @@ def with_admin_only(callback):
         return await callback(update, context)
 
     return returned_callback
-

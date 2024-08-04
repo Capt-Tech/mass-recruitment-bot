@@ -17,9 +17,8 @@ async def interview(update: Update, context: CallbackContext):
     for subcomm, link in links:
         message += f'{i}. {subcomm} - <a href="{link}">Book Interview</a>\n'
         i += 1
-    
+
     username = update.effective_user.username
     chat_id = update.message.chat_id
-    file.record_user_details(username, chat_id)
 
     await update.effective_message.reply_text(message, parse_mode="HTML")

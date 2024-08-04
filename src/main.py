@@ -10,7 +10,7 @@ from telegram.ext import (
     ConversationHandler,
     MessageHandler,
     filters,
-    CallbackQueryHandler
+    CallbackQueryHandler,
 )
 from config import config, read_dotenv
 
@@ -31,9 +31,9 @@ COMMANDS_DICT = {
     "start": "Display help page",
     "interview": "Book an interview slot",
     "result": "Get outcome",
-    "upload_interview": "Upload interview details", 
-    "upload_results": "Upload result details", 
-    "broadcast": "Broadcast a message"
+    "upload_interview": "Upload interview details",
+    "upload_results": "Upload result details",
+    "broadcast": "Broadcast a message",
 }
 
 TBOT.set_my_commands(COMMANDS_DICT.items())
@@ -54,28 +54,40 @@ def main():
                     ),
                 ),
                 CommandHandler(
-                    "interview", middlewares.with_dm_only(commands.interview)
+                    "interview",
+                    middlewares.with_dm_only(
+                        middlewares.store_user_data(commands.interview)
+                    ),
                 ),
-                CommandHandler("result", middlewares.with_dm_only(commands.result)),
+                CommandHandler(
+                    "result",
+                    middlewares.with_dm_only(
+                        middlewares.store_user_data(commands.result)
+                    ),
+                ),
                 CommandHandler(
                     "upload_interview",
                     middlewares.with_dm_only(
-                        middlewares.with_admin_only(commands.upload_interview)
+                        middlewares.with_admin_only(
+                            middlewares.store_user_data(commands.upload_interview)
+                        )
                     ),
                 ),
                 CommandHandler(
                     "upload_result",
                     middlewares.with_dm_only(
-                        middlewares.with_admin_only(commands.upload_result)
+                        middlewares.with_admin_only(
+                            middlewares.store_user_data(commands.upload_result)
+                        )
                     ),
-                    
                 ),
                 CommandHandler(
                     "broadcast",
                     middlewares.with_dm_only(
-                        middlewares.with_admin_only(commands.broadcast)
+                        middlewares.with_admin_only(
+                            middlewares.store_user_data(commands.broadcast)
+                        )
                     ),
-                    
                 ),
             ],
             states={
@@ -92,15 +104,16 @@ def main():
                     )
                 ],
                 constants.ConvState.Choosing: [
-                    CallbackQueryHandler(commands.choosing, pattern='^fixed|custom$')
+                    CallbackQueryHandler(commands.choosing, pattern="^fixed|custom$")
                 ],
                 constants.ConvState.TypingReply: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, commands.received_message)
+                    MessageHandler(
+                        filters.TEXT & ~filters.COMMAND, commands.received_message
+                    )
                 ],
                 constants.ConvState.Confirm: [
-                    CallbackQueryHandler(commands.confirm, pattern='^yes|no$')
+                    CallbackQueryHandler(commands.confirm, pattern="^yes|no$")
                 ],
-                
             },
             fallbacks=[
                 CommandHandler(
@@ -109,7 +122,7 @@ def main():
                         middlewares.with_dm_only(commands.start)
                     ),
                 ),
-                CommandHandler("cancel", commands.cancel)
+                CommandHandler("cancel", commands.cancel),
             ],
         )
     )
