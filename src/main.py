@@ -10,6 +10,7 @@ from telegram.ext import (
     ConversationHandler,
     MessageHandler,
     filters,
+    CallbackQueryHandler
 )
 from config import config, read_dotenv
 
@@ -30,6 +31,9 @@ COMMANDS_DICT = {
     "start": "Display help page",
     "interview": "Book an interview slot",
     "result": "Get outcome",
+    "upload_interview": "Upload interview details", 
+    "upload_results": "Upload result details", 
+    "broadcast": "Broadcast a message"
 }
 
 TBOT.set_my_commands(COMMANDS_DICT.items())
@@ -64,6 +68,14 @@ def main():
                     middlewares.with_dm_only(
                         middlewares.with_admin_only(commands.upload_result)
                     ),
+                    
+                ),
+                CommandHandler(
+                    "broadcast",
+                    middlewares.with_dm_only(
+                        middlewares.with_admin_only(commands.broadcast)
+                    ),
+                    
                 ),
             ],
             states={
@@ -79,6 +91,16 @@ def main():
                         callbacks.receive_upload_excel,
                     )
                 ],
+                constants.ConvState.Choosing: [
+                    CallbackQueryHandler(commands.choosing, pattern='^fixed|custom$')
+                ],
+                constants.ConvState.TypingReply: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, commands.received_message)
+                ],
+                constants.ConvState.Confirm: [
+                    CallbackQueryHandler(commands.confirm, pattern='^yes|no$')
+                ],
+                
             },
             fallbacks=[
                 CommandHandler(
@@ -86,7 +108,8 @@ def main():
                     middlewares.with_admin_context(
                         middlewares.with_dm_only(commands.start)
                     ),
-                )
+                ),
+                CommandHandler("cancel", commands.cancel)
             ],
         )
     )
