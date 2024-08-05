@@ -28,17 +28,6 @@ logger = logging.getLogger("main")
 TBOT = Bot(config.get("TELEGRAM_BOT_API_KEY"))
 TBOT.set_my_commands(constants.COMMANDS.items())
 
-COMMANDS_DICT = {
-    "start": "Display help page",
-    "interview": "Book an interview slot",
-    "result": "Get outcome",
-    "upload_interview": "Upload interview details",
-    "upload_results": "Upload result details",
-    "broadcast": "Broadcast a message",
-}
-
-TBOT.set_my_commands(COMMANDS_DICT.items())
-
 
 def main():
     application = (
