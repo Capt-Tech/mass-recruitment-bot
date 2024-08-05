@@ -1,5 +1,5 @@
 from .start import start
-from .interview import interview
+from .verify import verify
 from .result import result, reply_result
 from .upload_interview import upload_interview
 from .upload_result import upload_result

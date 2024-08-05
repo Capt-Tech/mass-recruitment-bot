@@ -44,9 +44,9 @@ def main():
                     ),
                 ),
                 CommandHandler(
-                    "interview",
+                    "verify",
                     middlewares.with_dm_only(
-                        middlewares.store_user_data(commands.interview)
+                        middlewares.store_user_data(commands.verify)
                     ),
                 ),
                 CommandHandler(
