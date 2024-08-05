@@ -12,9 +12,13 @@ class ConvState(str, Enum):
     RequestInterviewExcel = "RequestInterviewExcel"
     RequestResultExcel = "RequestResultExcel"
     Choosing = "Choosing"
+    WaitingPhoto = "WaitingPhoto"
     TypingReply = "TypingReply"
-    Confirm = "Confirm"
+    ConfirmBroadcast = "Confirm"
 
+class BroadcastType(str, Enum):
+    Message = "BroadcastMessage"
+    Results = "BroadcastResults"
 
 def get_interview_path(prefix=""):
     return config.get("BASE_PATH") + "/"+prefix+"interview.csv"
@@ -27,9 +31,21 @@ def get_result_path(prefix=""):
 def get_user_details_path(prefix=""):
     return config.get("BASE_PATH") + "/"+prefix+"user_details.json"
 
+COMMANDS = {
+    "start": "Display help page",
+    "verify": "Verify the committees you applied to",
+    "result": "Get roles offered",
+}
 
-START_PART_A = "Welcome to the CAPT Mass Recruitment Bot! This bot is used to manage the mass recruitment process for CAPT. You can use the following commands:\n/start - Display this message\n/interview - Get interview booking links\n/result - Get roles offered"
-START_PART_B = "\n\nAdmin commands:\n/upload_interview - Upload interview schedule\n/upload_result - Upload results\n/broadcast-Broadcast a message to all users"
+ADMIN_COMMANDS = {
+    "upload_interview": "Upload interview schedule",
+    "upload_result": "Upload results",
+    "broadcast_message": "Broadcast a message to all users",
+    "broadcast_results": "Broadcast results to all users",
+}
+
+START_PART_A = "Welcome to the CAPT Mass Recruitment Bot! This bot is used to manage the mass recruitment process for CAPT. You can use the following commands:\n" + "\n".join(map(lambda x: f"/{x} - {COMMANDS[x]}",COMMANDS.keys()))
+START_PART_B = "\n\nAdmin commands:\n" + "\n".join(map(lambda x: f"/{x} - {ADMIN_COMMANDS[x]}",ADMIN_COMMANDS.keys()))
 
 def get_start_message(is_admin):
     START_PART_C = f"\n\nPlease contact admins regarding any issues or queries:\n{"\n".join(map(lambda x: "@"+x,config.get("ADMIN_USERNAME")))}\n\nThis bot was developed by {" ".join(map(lambda x: "@"+x,config.get("DEVELOPERS")))}.\n"
