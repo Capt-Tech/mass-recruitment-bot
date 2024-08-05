@@ -30,7 +30,7 @@ TBOT.set_my_commands(constants.COMMANDS.items())
 
 COMMANDS_DICT = {
     "start": "Display help page",
-    "interview": "Book an interview slot",
+    "verify": "verify the committees you applied to",
     "result": "Get outcome",
     "upload_interview": "Upload interview details",
     "upload_results": "Upload result details",
@@ -55,9 +55,9 @@ def main():
                     ),
                 ),
                 CommandHandler(
-                    "interview",
+                    "verify",
                     middlewares.with_dm_only(
-                        middlewares.store_user_data(commands.interview)
+                        middlewares.store_user_data(commands.verify)
                     ),
                 ),
                 CommandHandler(

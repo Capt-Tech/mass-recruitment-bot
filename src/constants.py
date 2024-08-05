@@ -33,7 +33,7 @@ def get_user_details_path(prefix=""):
 
 COMMANDS = {
     "start": "Display help page",
-    "interview": "Get interview booking links",
+    "verify": "Verify the committees you applied to",
     "result": "Get roles offered",
 }
 
