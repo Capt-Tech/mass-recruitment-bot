@@ -9,7 +9,7 @@ NO = 'no'
 TMP_PREFIX = "tmp_"
 
 class ConvState(str, Enum):
-    RequestInterviewExcel = "RequestInterviewExcel"
+    RequestVerifyExcel = "RequestVerifyExcel"
     RequestResultExcel = "RequestResultExcel"
     Choosing = "Choosing"
     WaitingPhoto = "WaitingPhoto"
@@ -20,8 +20,8 @@ class BroadcastType(str, Enum):
     Message = "BroadcastMessage"
     Results = "BroadcastResults"
 
-def get_interview_path(prefix=""):
-    return config.get("BASE_PATH") + "/"+prefix+"interview.csv"
+def get_verify_path(prefix=""):
+    return config.get("BASE_PATH") + "/"+prefix+"verify.csv"
 
 
 def get_result_path(prefix=""):
@@ -38,7 +38,7 @@ COMMANDS = {
 }
 
 ADMIN_COMMANDS = {
-    "upload_interview": "Upload interview schedule",
+    "upload_verify": "Upload verification data",
     "upload_result": "Upload results",
     "broadcast_message": "Broadcast a message to all users",
     "broadcast_results": "Broadcast results to all users",

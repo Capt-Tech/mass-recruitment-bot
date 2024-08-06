@@ -1,4 +1,5 @@
 import logging
+import asyncio
 import commands
 import callbacks
 import constants
@@ -26,10 +27,16 @@ logging.getLogger("apscheduler.executors.default").setLevel(logging.WARNING)
 logger = logging.getLogger("main")
 
 TBOT = Bot(config.get("TELEGRAM_BOT_API_KEY"))
-TBOT.set_my_commands(constants.COMMANDS.items())
+
+
+async def set_commands():
+    await TBOT.set_my_commands(constants.COMMANDS.items())
 
 
 def main():
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(set_commands())
+
     application = (
         Application.builder().token(config.get("TELEGRAM_BOT_API_KEY")).build()
     )
@@ -56,10 +63,10 @@ def main():
                     ),
                 ),
                 CommandHandler(
-                    "upload_interview",
+                    "upload_verify",
                     middlewares.with_dm_only(
                         middlewares.with_admin_only(
-                            middlewares.store_user_data(commands.upload_interview)
+                            middlewares.store_user_data(commands.upload_verify)
                         )
                     ),
                 ),
@@ -89,7 +96,7 @@ def main():
                 ),
             ],
             states={
-                constants.ConvState.RequestInterviewExcel: [
+                constants.ConvState.RequestVerifyExcel: [
                     MessageHandler(
                         filters.Document.FileExtension("csv"),
                         callbacks.receive_upload_excel,

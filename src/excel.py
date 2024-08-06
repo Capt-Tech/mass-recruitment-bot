@@ -1,29 +1,27 @@
 import constants
 import pandas as pd
-import math
+import json
 
-TELEGRAM_HANDLE_COLUMN = "telegram handle"
-BOOKING_LINK_ROW = "bookingLink"
+TELEGRAM_HANDLE_COLUMN = "Telegram Handle"
+COMMITTEE_COLUMN = "Committees Interested In"
 PD_HANDLE_ROW = "pd"
 
-INTERVIEW_POSITIVE = "1"
 
-
-def validate_interview_file(path):
-    is_interview_path = path == constants.get_interview_path(constants.TMP_PREFIX)
+def validate_file(path):
+    is_verify_path = path == constants.get_verify_path(constants.TMP_PREFIX)
     is_result_path = path == constants.get_result_path(constants.TMP_PREFIX)
 
-    if not is_interview_path and not is_result_path:
+    if not is_verify_path and not is_result_path:
         return "Invalid file path"
 
     try:
         df = pd.read_csv(path, index_col=TELEGRAM_HANDLE_COLUMN)
 
-        if is_interview_path:
+        if is_verify_path:
             try:
-                df.loc[BOOKING_LINK_ROW]
+                df[[COMMITTEE_COLUMN]]
             except KeyError:
-                return BOOKING_LINK_ROW + " row not found"
+                return COMMITTEE_COLUMN + " column not found"
 
         if is_result_path:
             try:
@@ -34,18 +32,11 @@ def validate_interview_file(path):
         return TELEGRAM_HANDLE_COLUMN + " column not found"
 
 
-def get_interview_data(username):
+def get_verify_data(username):
     try:
-        df = pd.read_csv(
-            constants.get_interview_path(), index_col=TELEGRAM_HANDLE_COLUMN
-        )
-        links = df.loc[BOOKING_LINK_ROW].items()
+        df = pd.read_csv(constants.get_verify_path(), index_col=TELEGRAM_HANDLE_COLUMN)
         try:
-            result = []
-            for subcomm, link in links:
-                if df.loc[username][subcomm] == INTERVIEW_POSITIVE:
-                    result.append((subcomm, link))
-            return result
+            return json.loads(df.loc[username][COMMITTEE_COLUMN])
         except KeyError:
             return []
     except FileNotFoundError:
@@ -76,7 +67,10 @@ def get_result_usernames():
     try:
         df = pd.read_csv(constants.get_result_path(), index_col=TELEGRAM_HANDLE_COLUMN)
         usernames_with_at = list(
-            filter(lambda x: x != PD_HANDLE_ROW, df.index.values.tolist())
+            filter(
+                lambda x: x != PD_HANDLE_ROW and len(x.strip()) > 0,
+                df.index.values.tolist(),
+            )
         )
         return list(map(lambda x: x[1:], usernames_with_at))
     except FileNotFoundError:
