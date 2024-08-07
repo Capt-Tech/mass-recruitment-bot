@@ -15,7 +15,7 @@ def validate_file(path):
         return "Invalid file path"
 
     try:
-        df = pd.read_csv(path, index_col=TELEGRAM_HANDLE_COLUMN)
+        df = pd.read_csv(path, index_col=TELEGRAM_HANDLE_COLUMN, encoding="ISO-8859-1")
 
         if is_verify_path:
             try:
