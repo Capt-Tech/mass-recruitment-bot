@@ -15,7 +15,7 @@ def validate_file(path):
         return "Invalid file path"
 
     try:
-        df = pd.read_csv(path, index_col=TELEGRAM_HANDLE_COLUMN)
+        df = pd.read_csv(path, index_col=TELEGRAM_HANDLE_COLUMN, encoding="ISO-8859-1")
 
         if is_verify_path:
             try:
@@ -34,7 +34,11 @@ def validate_file(path):
 
 def get_verify_data(username):
     try:
-        df = pd.read_csv(constants.get_verify_path(), index_col=TELEGRAM_HANDLE_COLUMN)
+        df = pd.read_csv(
+            constants.get_verify_path(),
+            index_col=TELEGRAM_HANDLE_COLUMN,
+            encoding="ISO-8859-1",
+        )
         try:
             return json.loads(df.loc[username][COMMITTEE_COLUMN])
         except KeyError:
@@ -45,7 +49,11 @@ def get_verify_data(username):
 
 def get_result_data(username):
     try:
-        df = pd.read_csv(constants.get_result_path(), index_col=TELEGRAM_HANDLE_COLUMN)
+        df = pd.read_csv(
+            constants.get_result_path(),
+            index_col=TELEGRAM_HANDLE_COLUMN,
+            encoding="ISO-8859-1",
+        )
         pd_handles = df.loc[PD_HANDLE_ROW].items()
         try:
             result = []
@@ -65,7 +73,11 @@ def get_result_data(username):
 
 def get_result_usernames():
     try:
-        df = pd.read_csv(constants.get_result_path(), index_col=TELEGRAM_HANDLE_COLUMN)
+        df = pd.read_csv(
+            constants.get_result_path(),
+            index_col=TELEGRAM_HANDLE_COLUMN,
+            encoding="ISO-8859-1",
+        )
         usernames_with_at = list(
             filter(
                 lambda x: x != PD_HANDLE_ROW and len(x.strip()) > 0,
