@@ -54,6 +54,7 @@ def get_result_data(username):
             index_col=TELEGRAM_HANDLE_COLUMN,
             encoding="ISO-8859-1",
         )
+        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         pd_handles = df.loc[PD_HANDLE_ROW].items()
         try:
             result = []
@@ -78,9 +79,10 @@ def get_result_usernames():
             index_col=TELEGRAM_HANDLE_COLUMN,
             encoding="ISO-8859-1",
         )
+        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         usernames_with_at = list(
             filter(
-                lambda x: x != PD_HANDLE_ROW and len(x.strip()) > 0,
+                lambda x: type(x) == str and x != PD_HANDLE_ROW and len(x.strip()) > 0,
                 df.index.values.tolist(),
             )
         )

@@ -136,8 +136,12 @@ async def confirm(update: Update, context: CallbackContext) -> int:
             sent_users = set()
             result_usernames = excel.get_result_usernames()
 
-            for username, details in user_details.items():
-                chat_id = details["chat_id"]
+            for username in result_usernames:
+                if username not in user_details:
+                    failed_users.add(username)
+                    continue
+                
+                chat_id = user_details[username]["chat_id"]
                 try:
                     await reply_result(
                         context=context, chat_id=chat_id, username=username
@@ -146,11 +150,7 @@ async def confirm(update: Update, context: CallbackContext) -> int:
                 except Exception as e:
                     print(e)
                     failed_users.add(username)
-
-            for username in result_usernames:
-                if username not in sent_users:
-                    failed_users.add(username)
-
+  
             if len(failed_users) > 0:
                 await query.edit_message_text(
                     f"Results broadcasted to all users\n\nFailed to send to:\n{'\n'.join(map(lambda x:"@"+x,failed_users))}",
