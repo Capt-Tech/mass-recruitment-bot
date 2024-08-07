@@ -36,7 +36,7 @@ DEVELOPERS = <your telegram handle separated with ;>
 pip install -r requirements.txt
 ```
 
-4. Create a data folder in the root folder and a tmp_interview.csv file
+4. Create a data folder in the root folder
 
 5. Run Bot
 

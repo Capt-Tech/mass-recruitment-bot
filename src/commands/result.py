@@ -31,7 +31,7 @@ async def reply_result(
         await message_fn("You have not been offered any roles.")
         return ConversationHandler.END
 
-    message = "Hi, you have been offered the following roles:\n\n"
+    message = "Hi, these are the statuses of roles you applied for:\n\n"
     i = 1
     for comm, subcomm, pd_handle in pd_handles:
         message += f"{i}. {comm} - {subcomm} [{pd_handle}]\n"
