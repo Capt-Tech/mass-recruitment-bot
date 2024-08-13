@@ -5,6 +5,9 @@ import constants
 import file
 from commands.result import reply_result
 import excel
+import logging
+
+logger = logging.getLogger("broadcast")
 
 yes_no_keyboard = [
     [
@@ -119,7 +122,7 @@ async def confirm(update: Update, context: CallbackContext) -> int:
                     else:
                         await context.bot.send_message(chat_id, context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
                 except Exception as e:
-                    print(e)
+                    logger.warn(f"Failed to send message to {username}: {e}")
                     failed_users.add(username)
 
             if len(failed_users) > 0:
@@ -141,14 +144,14 @@ async def confirm(update: Update, context: CallbackContext) -> int:
                     failed_users.add(username)
                     continue
                 
-                chat_id = user_details[username]["chat_id"]
+                chat_id = user_details[username.lower().strip()]["chat_id"]
                 try:
                     await reply_result(
                         context=context, chat_id=chat_id, username=username
                     )
                     sent_users.add(username)
                 except Exception as e:
-                    print(e)
+                    logger.warn(f"Failed to send results to {username}: {e}")
                     failed_users.add(username)
   
             if len(failed_users) > 0:
@@ -166,8 +169,3 @@ async def confirm(update: Update, context: CallbackContext) -> int:
     elif text == constants.NO:
         await query.edit_message_text("Broadcast cancelled.")
         return ConversationHandler.END
-
-
-async def cancel(update: Update, context: CallbackContext) -> int:
-    await update.message.reply_text("Broadcast cancelled.")
-    return ConversationHandler.END

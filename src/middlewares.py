@@ -3,6 +3,16 @@ from config import config
 import file
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
+import logging
+
+
+def with_command_log(command, callback):
+    async def returned_callback(update: Update, context: CallbackContext):
+        logger = logging.getLogger(command)
+        logger.info(f"User {update.effective_user.username} used command /{command}")
+        return await callback(update, context)
+
+    return returned_callback
 
 
 def with_dm_only(callback):

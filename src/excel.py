@@ -32,13 +32,15 @@ def validate_file(path):
         return TELEGRAM_HANDLE_COLUMN + " column not found"
 
 
-def get_verify_data(username):
+def get_verify_data(username: str):
+    username = username.lower().strip()
     try:
         df = pd.read_csv(
             constants.get_verify_path(),
             index_col=TELEGRAM_HANDLE_COLUMN,
             encoding="ISO-8859-1",
         )
+        df.index = df.index.str.lower().str.strip()
         try:
             return json.loads(df.loc[username][COMMITTEE_COLUMN])
         except KeyError:
@@ -47,13 +49,15 @@ def get_verify_data(username):
         return []
 
 
-def get_result_data(username):
+def get_result_data(username: str):
+    username = username.lower().strip()
     try:
         df = pd.read_csv(
             constants.get_result_path(),
             index_col=TELEGRAM_HANDLE_COLUMN,
             encoding="ISO-8859-1",
         )
+        df.index = df.index.str.lower().str.strip()
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         pd_handles = df.loc[PD_HANDLE_ROW].items()
         try:
@@ -86,6 +90,6 @@ def get_result_usernames():
                 df.index.values.tolist(),
             )
         )
-        return list(map(lambda x: x[1:], usernames_with_at))
+        return list(map(lambda x: x[1:].strip().lower(), usernames_with_at))
     except FileNotFoundError:
         return None
