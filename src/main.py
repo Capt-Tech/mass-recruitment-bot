@@ -46,20 +46,29 @@ def main():
             entry_points=[
                 CommandHandler(
                     "start",
-                    middlewares.with_admin_context(
-                        middlewares.with_dm_only(commands.start)
+                    middlewares.with_command_log(
+                        "start",
+                        middlewares.with_admin_context(
+                            middlewares.with_dm_only(commands.start)
+                        ),
                     ),
                 ),
                 CommandHandler(
                     "verify",
-                    middlewares.with_dm_only(
-                        middlewares.store_user_data(commands.verify)
+                    middlewares.with_command_log(
+                        "verify",
+                        middlewares.with_dm_only(
+                            middlewares.store_user_data(commands.verify)
+                        ),
                     ),
                 ),
                 CommandHandler(
                     "result",
-                    middlewares.with_dm_only(
-                        middlewares.store_user_data(commands.result)
+                    middlewares.with_command_log(
+                        "result",
+                        middlewares.with_dm_only(
+                            middlewares.store_user_data(commands.result)
+                        ),
                     ),
                 ),
                 CommandHandler(
