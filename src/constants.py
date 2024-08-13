@@ -43,7 +43,6 @@ ADMIN_COMMANDS = {
     "broadcast_message": "Broadcast a message to all users",
     "broadcast_results": "Broadcast results to all users",
     "registered_users": "List all registered users",
-    "logs": "Display logs",
 }
 
 START_PART_A = "Welcome to the CAPT Mass Recruitment Bot! This bot is used to manage the mass recruitment process for CAPT. You can use the following commands:\n" + "\n".join(map(lambda x: f"/{x} - {COMMANDS[x]}",COMMANDS.keys()))

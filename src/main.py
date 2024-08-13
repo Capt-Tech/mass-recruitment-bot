@@ -73,50 +73,57 @@ def main():
                 ),
                 CommandHandler(
                     "upload_verify",
-                    middlewares.with_dm_only(
-                        middlewares.with_admin_only(
-                            middlewares.store_user_data(commands.upload_verify)
-                        )
+                    middlewares.with_command_log(
+                        "upload_verify",
+                        middlewares.with_dm_only(
+                            middlewares.with_admin_only(
+                                middlewares.store_user_data(commands.upload_verify)
+                            )
+                        ),
                     ),
                 ),
                 CommandHandler(
                     "upload_result",
-                    middlewares.with_dm_only(
-                        middlewares.with_admin_only(
-                            middlewares.store_user_data(commands.upload_result)
-                        )
+                    middlewares.with_command_log(
+                        "upload_result",
+                        middlewares.with_dm_only(
+                            middlewares.with_admin_only(
+                                middlewares.store_user_data(commands.upload_result)
+                            )
+                        ),
                     ),
                 ),
                 CommandHandler(
                     "broadcast_message",
-                    middlewares.with_dm_only(
-                        middlewares.with_admin_only(
-                            middlewares.store_user_data(commands.broadcast_message)
-                        )
+                    middlewares.with_command_log(
+                        "broadcast_message",
+                        middlewares.with_dm_only(
+                            middlewares.with_admin_only(
+                                middlewares.store_user_data(commands.broadcast_message)
+                            )
+                        ),
                     ),
                 ),
                 CommandHandler(
                     "broadcast_results",
-                    middlewares.with_dm_only(
-                        middlewares.with_admin_only(
-                            middlewares.store_user_data(commands.broadcast_results)
-                        )
+                    middlewares.with_command_log(
+                        "broadcast_results",
+                        middlewares.with_dm_only(
+                            middlewares.with_admin_only(
+                                middlewares.store_user_data(commands.broadcast_results)
+                            )
+                        ),
                     ),
                 ),
                 CommandHandler(
                     "registered_users",
-                    middlewares.with_dm_only(
-                        middlewares.with_admin_only(
-                            middlewares.store_user_data(commands.registered_users)
-                        )
-                    ),
-                ),
-                CommandHandler(
-                    "logs",
-                    middlewares.with_dm_only(
-                        middlewares.with_admin_only(
-                            middlewares.store_user_data(commands.display_logs)
-                        )
+                    middlewares.with_command_log(
+                        "registered_users",
+                        middlewares.with_dm_only(
+                            middlewares.with_admin_only(
+                                middlewares.store_user_data(commands.registered_users)
+                            )
+                        ),
                     ),
                 ),
             ],
