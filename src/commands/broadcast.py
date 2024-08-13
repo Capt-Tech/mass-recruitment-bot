@@ -172,5 +172,5 @@ async def confirm(update: Update, context: CallbackContext) -> int:
 
 
 async def cancel(update: Update, context: CallbackContext) -> int:
-    await update.message.reply_text("Broadcast cancelled.")
+    await update.message.reply_text("Operation cancelled")
     return ConversationHandler.END
