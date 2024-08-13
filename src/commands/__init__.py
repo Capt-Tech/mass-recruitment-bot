@@ -13,3 +13,4 @@ from .broadcast import (
     confirm,
 )
 from .registered_users import registered_users
+from .display_logs import display_logs

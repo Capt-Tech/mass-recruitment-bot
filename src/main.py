@@ -111,6 +111,14 @@ def main():
                         )
                     ),
                 ),
+                CommandHandler(
+                    "logs",
+                    middlewares.with_dm_only(
+                        middlewares.with_admin_only(
+                            middlewares.store_user_data(commands.display_logs)
+                        )
+                    ),
+                ),
             ],
             states={
                 constants.ConvState.RequestVerifyExcel: [
