@@ -90,6 +90,6 @@ def get_result_usernames():
                 df.index.values.tolist(),
             )
         )
-        return list(map(lambda x: x[1:], usernames_with_at))
+        return list(map(lambda x: x[1:].strip().lower(), usernames_with_at))
     except FileNotFoundError:
         return None
