@@ -169,8 +169,3 @@ async def confirm(update: Update, context: CallbackContext) -> int:
     elif text == constants.NO:
         await query.edit_message_text("Broadcast cancelled.")
         return ConversationHandler.END
-
-
-async def cancel(update: Update, context: CallbackContext) -> int:
-    await update.message.reply_text("Operation cancelled")
-    return ConversationHandler.END

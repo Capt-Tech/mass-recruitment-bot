@@ -103,6 +103,14 @@ def main():
                         )
                     ),
                 ),
+                CommandHandler(
+                    "registered_users",
+                    middlewares.with_dm_only(
+                        middlewares.with_admin_only(
+                            middlewares.store_user_data(commands.registered_users)
+                        )
+                    ),
+                ),
             ],
             states={
                 constants.ConvState.RequestVerifyExcel: [
