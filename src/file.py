@@ -18,12 +18,15 @@ def read_user_details(file_path):
     return {}
 
 
-def record_user_details(username, chat_id):
+def record_user_details(username: str, chat_id: int):
     file_path = constants.get_user_details_path()
     ensure_directory_exists(file_path)
 
     user_details = read_user_details(file_path)
-    user_details[username] = {"chat_id": chat_id}
+    user_details[username.lower().strip()] = {"chat_id": chat_id}
+
+    # Convert all keys to lowercase and strip whitespace
+    user_details = {key.lower().strip(): value for key, value in user_details.items()}
 
     # Write the updated user details back to the JSON file
     try:
