@@ -8,6 +8,23 @@ NO = 'no'
 
 TMP_PREFIX = "tmp_"
 
+MUTEX_COMMS = {"ACE" : ["CAPT in Silence PD", "CAPT in the Dark PD", "Constellations PD", "ACE Elderly PD", "ACE Homes PD", "Kindle PD", "ACE Migrants PD", "PACE PD"," Stella PD"],
+             "EXA" : [ "Committee Member (10)", "Publicity Head (1)", "General Secretary (1)", "Finance Secrtary (1)"],
+             "SI" : ["Committee Member (20)"],
+             "Clubs & Societies" : ["General Secretary (1)", "Financial Secretary (1)", "Publicity Head (1)", "Events Executive (2)","Publicity Members (2)"],
+             "Pubs" : ["CAPTlet - Journalism Head", "CAPTlet - Designer Head", "CAPTlet - Journalist (2)"," CAPTlet - Designer (2)", "Design - Board Design Head", "Design - Merchandise Head", "Design Member (4)", "Socials - Social Media Head", "Socials - Events Coverage Head", "Socials - Social Media Content Creator (3)", "Socials - Events Coverage Specialist (2)", "TechDev - CAPTlife Head", "TechDev - Treeckle Head", "TechDev Developer (5)"],
+             "Sports Committee" : ["General Secretary", "EXCO role (1)", "Financial Secretary", "Sub-comm role (1)", "Events IC", "Sub-comm role (2)" ,"Publicity IC", "Sub comm role (2)" ],
+             "SAC" : ["General Secretary (1)", "Finance Secretary (1)", "Publicity Head (1)", "Welfare Executive (2)" ,"Welcome Back Dinner (WBD) Executive (2)" ,"CAPTain Meets Baegel (CMB) Executive (2)","Inter-Neighbourhood Shield (INS) Executive (2)","CAPT Buddy Executive (1)"],
+             "FOC" : ["Project Director (1)"],
+             "Rag & Flag" : ["Project Director (1)"],
+             "CE Fest 2024" : ["Project Director (1)"],
+             "Roc House Comm" : ["Programmes (6)", "Publicity (6)", "Admin and Finance Secrataries (4)"],
+             "Dragon House Comm" : ["Secretaries (Finance) (1)", "Secretaries (General) (1)", "Creatives (4)", "Events (4)", "Welfare (3)"],
+             "Garuda House Comm" : ["Admin & Finance members (3)", "Programmes members (6)", "Publicity members (4)"," Tech members (2)"],
+             "Pheonix House Comm" : ["Welfare (5)", "Spirits (5)", "Socials & Designs (5)", "General Secretary (1)", "Finance Secretary (1)"],
+             "Tulpar House Comm" : ["Events/Welfare (8)", "Pubs (3)", "Admin/Fin (3)"]
+}
+
 class ConvState(str, Enum):
     RequestVerifyExcel = "RequestVerifyExcel"
     RequestResultExcel = "RequestResultExcel"

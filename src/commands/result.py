@@ -14,7 +14,7 @@ async def reply_result(
     context: CallbackContext = None,
     chat_id: int = None,
     username: str = None,
-):
+): 
     if username == None:
         username = update.effective_user.username
         message_fn = update.effective_message.reply_text
@@ -33,13 +33,31 @@ async def reply_result(
 
     message = "Hi, these are the statuses of roles you applied for:\n\n"
     i = 1
+    mutex_count = 0
+    mutex_comms = constants.MUTEX_COMMS
+    exclusive_comms_offered = []
     for comm, subcomm, pd_handle in pd_handles:
         message += f"{i}. {comm} - {subcomm} [{pd_handle}]\n"
         i += 1
+    
+        if subcomm in mutex_comms.get(comm, []):
+            mutex_count += 1
+            exclusive_comms_offered.append(f"{comm} - {subcomm}")
     message += "\nPlease kindly accept one offer by sending the relevant PD the following message"
+
+
     await message_fn(message)
     await message_fn(
         "I, __Name, Student No\\.__, accept the role of __role__\\.",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
+
+    j = 1
+    if mutex_count > 1:
+        mutex_message = f"🚨 Please take note that the following offers are mutually exclusive:\n\n"
+        for comm in exclusive_comms_offered:
+            mutex_message += f"{j}. {comm}\n"
+            j += 1
+        await message_fn(mutex_message)
+        
     return ConversationHandler.END
