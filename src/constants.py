@@ -27,7 +27,6 @@ MUTEX_COMMS = {
     "Pheonix House Comm" : ".*",
     "Tulpar House Comm" : ".*",
     "EnCAPTsulate" : ".*",
-    "CSC Secretariat": ".*",
 }
 
 class ConvState(str, Enum):
