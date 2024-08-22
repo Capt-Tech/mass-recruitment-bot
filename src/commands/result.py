@@ -50,6 +50,9 @@ async def reply_result(
             mutex_count += 1
             exclusive_comms_offered.append(f"{comm} - {subcomm}")
 
+    if len(pd_handles) == 0:
+        message += "You have not been offered any roles.\n"
+
     message += "\nPlease kindly accept offer(s) by sending the relevant PD(s) the following message"
     await message_fn(message)
     await message_fn(
