@@ -1,3 +1,4 @@
+import re
 import excel
 import constants
 from telegram import Update
@@ -40,7 +41,8 @@ async def reply_result(
         message += f"{i}. {comm} - {subcomm} [{pd_handle}]\n"
         i += 1
 
-        if subcomm in mutex_comms.get(comm, []):
+        mutex_regex = mutex_comms.get(comm)
+        if mutex_regex and re.match(mutex_regex, subcomm):
             mutex_count += 1
             exclusive_comms_offered.append(f"{comm} - {subcomm}")
 
