@@ -42,7 +42,11 @@ async def reply_result(
         i += 1
 
         mutex_regex = mutex_comms.get(comm)
-        if mutex_regex and re.match(mutex_regex, subcomm):
+        if (
+            mutex_regex
+            and re.match(mutex_regex, subcomm)
+            and subcomm.strip() != constants.REJECTED
+        ):
             mutex_count += 1
             exclusive_comms_offered.append(f"{comm} - {subcomm}")
 

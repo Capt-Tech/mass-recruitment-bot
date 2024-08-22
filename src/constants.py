@@ -8,6 +8,8 @@ NO = 'no'
 
 TMP_PREFIX = "tmp_"
 
+REJECTED = "Rejected"
+
 MUTEX_COMMS = {
     "ACE" : ".* PD",
     "EXA" : ".*",
