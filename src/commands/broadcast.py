@@ -80,7 +80,7 @@ async def received_message(update: Update, context: CallbackContext) -> int:
 async def received_photo(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(yes_no_keyboard)
     if not update.effective_message.photo or not update.effective_message.photo[0]:
-        if('broadcast_message' in context.user_data):
+        if "broadcast_photo" in context.user_data:
             del context.user_data["broadcast_photo"]
         await update.callback_query.answer()
         await update.effective_message.reply_text(
