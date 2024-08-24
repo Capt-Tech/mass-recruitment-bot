@@ -29,9 +29,7 @@ async def reply_result(
         await message_fn(constants.get_username_not_found_error_msg())
         return ConversationHandler.END
     if len(pd_handles) == 0:
-        await message_fn(
-            "Sorry! You have not been offered any roles for now. Please again check by the end of the round."
-        )
+        await message_fn("Sorry! You do not have any new offers for now. Thank you!")
         return ConversationHandler.END
 
     message = "Hi, these are the statuses of roles you applied for:\n\n"
