@@ -30,7 +30,7 @@ async def reply_result(
         return ConversationHandler.END
     if len(pd_handles) == 0:
         await message_fn(
-            "You have not been offered any roles for now. Please again check by the end of the round."
+            "Sorry! You have not been offered any roles for now. Please again check by the end of the round."
         )
         return ConversationHandler.END
 

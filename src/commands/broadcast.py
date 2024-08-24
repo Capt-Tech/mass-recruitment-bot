@@ -119,6 +119,7 @@ async def confirm(update: Update, context: CallbackContext) -> int:
                 try:
                     if "broadcast_photo" in context.user_data:
                         await context.bot.send_photo(chat_id, context.user_data["broadcast_photo"], caption=context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
+                        del context.user_data["broadcast_photo"]
                     else:
                         await context.bot.send_message(chat_id, context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
                 except Exception as e:
@@ -167,5 +168,6 @@ async def confirm(update: Update, context: CallbackContext) -> int:
             )
         return ConversationHandler.END
     elif text == constants.NO:
+        del context.user_data["broadcast_photo"]
         await query.edit_message_text("Broadcast cancelled.")
         return ConversationHandler.END
