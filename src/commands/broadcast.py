@@ -80,6 +80,8 @@ async def received_message(update: Update, context: CallbackContext) -> int:
 async def received_photo(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(yes_no_keyboard)
     if not update.effective_message.photo or not update.effective_message.photo[0]:
+        if('broadcast_message' in context.user_data):
+            del context.user_data["broadcast_photo"]
         await update.callback_query.answer()
         await update.effective_message.reply_text(
           context.user_data['broadcast_message'],
@@ -119,7 +121,6 @@ async def confirm(update: Update, context: CallbackContext) -> int:
                 try:
                     if "broadcast_photo" in context.user_data:
                         await context.bot.send_photo(chat_id, context.user_data["broadcast_photo"], caption=context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
-                        del context.user_data["broadcast_photo"]
                     else:
                         await context.bot.send_message(chat_id, context.user_data['broadcast_message'], parse_mode=ParseMode.HTML)
                 except Exception as e:
@@ -168,6 +169,5 @@ async def confirm(update: Update, context: CallbackContext) -> int:
             )
         return ConversationHandler.END
     elif text == constants.NO:
-        del context.user_data["broadcast_photo"]
         await query.edit_message_text("Broadcast cancelled.")
         return ConversationHandler.END
